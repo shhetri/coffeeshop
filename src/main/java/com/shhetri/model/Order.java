@@ -15,18 +15,18 @@ public class Order extends Model {
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderLine> orderLines = new ArrayList<>();
     @OneToOne
-    private User user;
+    private Person person;
 
     public List<OrderLine> getOrderLines() {
         return Collections.unmodifiableList(orderLines);
     }
 
-    public User getUser() {
-        return user;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Date getOrderDate() {
