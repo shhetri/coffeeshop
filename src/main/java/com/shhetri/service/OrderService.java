@@ -1,7 +1,7 @@
 package com.shhetri.service;
 
 import com.shhetri.model.Order;
-import com.shhetri.model.User;
+import com.shhetri.model.Person;
 import com.shhetri.model.Product;
 import com.shhetri.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class OrderService {
 		return orderRepository.findDistinctOrderByOrderLines_Product(product);
 	}
 	
-	public List<Order> findByUser(User user) {
-		return orderRepository.findOrderByUser(user);
+	public List<Order> findByUser(Person person) {
+		return orderRepository.findOrderByPerson(person);
 	}
 
 	public List<Order> findByDate(Date minDate, Date maxDate) {
