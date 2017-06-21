@@ -1,5 +1,8 @@
 package com.shhetri.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -7,11 +10,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "order_lines")
+@DynamicUpdate
 public class OrderLine extends Model {
     private int quantity;
     @OneToOne
     private Product product;
     @ManyToOne
+    @JsonBackReference
     private Order order;
 
     public int getQuantity() {

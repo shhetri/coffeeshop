@@ -42,13 +42,7 @@ public class ProductController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Product update(@Valid @RequestBody Product product, @PathVariable int id) throws ModelNotFoundException {
-        Product originalProduct = productService.getProduct(id);
-        originalProduct.setProductName(product.getProductName());
-        originalProduct.setProductType(product.getProductType());
-        originalProduct.setPrice(product.getPrice());
-        originalProduct.setDescription(product.getDescription());
-
-        return productService.save(originalProduct);
+        return productService.updateProduct(product, id);
     }
 
     @DeleteMapping("{id}")

@@ -1,5 +1,6 @@
 package com.shhetri.service;
 
+import com.shhetri.exceptions.ModelNotFoundException;
 import com.shhetri.model.Person;
 import com.shhetri.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +20,43 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public Person saveUser(Person person) {
+    public Person savePerson(Person person) {
         return personRepository.save(person);
     }
 
-    public List<Person> findByEmail(String email) {
-        return personRepository.findByEmail(email);
+    public Person updatePerson(Person person, int id) throws ModelNotFoundException {
+        Person originalPerson = findById(id);
+        originalPerson.setAddress(person.getAddress());
+        originalPerson.setEmail(person.getEmail());
+        originalPerson.setEnable(person.isEnable());
+        originalPerson.setFirstName(person.getFirstName());
+        originalPerson.setLastName(person.getLastName());
+        originalPerson.setPhone(person.getPhone());
+        originalPerson.getAddress().setCountry(person.getAddress().getCountry());
+        originalPerson.getAddress().setZipcode(person.getAddress().getZipcode());
+        originalPerson.getAddress().setCity(person.getAddress().getCity());
+        originalPerson.getAddress().setState(person.getAddress().getState());
+
+        return savePerson(originalPerson);
     }
 
-    public Person findById(Long id) {
-        return personRepository.findOne(id);
+    public Person findByEmail(String email) throws ModelNotFoundException {
+        return personRepository.findFirstByEmail(email).orElseThrow(
+                () -> new ModelNotFoundException(Person.class.getSimpleName(), "email", email)
+        );
     }
 
-    public void removeUser(Person person) {
+    public Person findById(int id) throws ModelNotFoundException {
+        return personRepository.findFirstById(id).orElseThrow(
+                () -> new ModelNotFoundException(Person.class.getSimpleName(), id)
+        );
+    }
+
+    public void removePerson(Person person) {
         personRepository.delete(person);
+    }
+
+    public List<Person> getAll() {
+        return personRepository.findAll();
     }
 }

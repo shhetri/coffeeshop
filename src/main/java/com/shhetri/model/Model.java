@@ -1,5 +1,7 @@
 package com.shhetri.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,10 +13,12 @@ public abstract class Model {
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date createdAt;
 
     @Column(name = "updated_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date updatedAt;
 
     public int getId() {
@@ -32,6 +36,7 @@ public abstract class Model {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
 
     public Date getUpdatedAt() {
         return updatedAt;

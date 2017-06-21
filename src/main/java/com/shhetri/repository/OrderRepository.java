@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
@@ -16,4 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findOrderByPerson(Person user);
 
     List<Order> findOrderByOrderDateBetween(Date minDate, Date maxDate);
+
+    Optional<Order> findById(int id);
 }

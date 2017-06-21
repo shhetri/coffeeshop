@@ -25,6 +25,16 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product updateProduct(Product product, int id) throws ModelNotFoundException {
+        Product originalProduct = getProduct(id);
+        originalProduct.setProductName(product.getProductName());
+        originalProduct.setProductType(product.getProductType());
+        originalProduct.setPrice(product.getPrice());
+        originalProduct.setDescription(product.getDescription());
+
+        return save(originalProduct);
+    }
+
     public void delete(Product product) {
         productRepository.delete(product);
     }

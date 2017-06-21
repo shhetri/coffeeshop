@@ -1,18 +1,43 @@
 package com.shhetri.model;
 
+import com.shhetri.validators.annotations.Phone;
+import com.shhetri.validators.annotations.UniqueEmail;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "persons")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DynamicUpdate
 public class Person extends Model {
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @NotBlank
+    @Email
+    @UniqueEmail
+    @Column(unique = true)
     private String email;
+
     @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
+    @Valid
     private Address address;
+
+    @NotEmpty
+    @Phone
     private String phone;
-    private boolean enable;
+
+    private boolean enable = true;
 
     public boolean isEnable() {
         return enable;

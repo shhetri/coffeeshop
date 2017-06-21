@@ -1,5 +1,8 @@
 package com.shhetri.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,11 +11,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@DynamicUpdate
 public class Order extends Model {
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<OrderLine> orderLines = new ArrayList<>();
     @OneToOne
     private Person person;
