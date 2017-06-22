@@ -86,6 +86,7 @@
                         $("#oTotalAmount").html(order.totalAmount);
                         $("#oTotalItems").html(order.quantity);
                         let orderLine = order.orderLines[0];
+                        $("#orderBody").html("");
                         $("#orderBody").append(
                             `<tr>
                                    <td>${orderLine.product.productName}</td>
