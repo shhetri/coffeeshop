@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.AbstractMap;
 import java.util.List;
 
-@RestController
+@RestController("productRestController")
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
@@ -50,7 +50,7 @@ public class ProductController {
         Product product = productService.getProduct(id);
         productService.delete(product);
 
-        return ResponseEntity.status(HttpStatus.GONE)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         new AbstractMap.SimpleEntry<>("success", String.format("Product with id %d successfully deleted.", id))
                 );

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="common_header">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -25,9 +25,10 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#" th:href="@{/products}">Product</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/products') || #httpServletRequest.getRequestURI().startsWith('/home') ||#httpServletRequest.getRequestURI().equals('/')  ? 'active':''}"><a href="#" th:href="@{/home}">Product</a></li>
+                <li sec:authorize="isAuthenticated()" th:classappend="${#httpServletRequest.getRequestURI().equals('/orders') ? 'active':''}"><a href="#" th:href="@{/orders}">My Orders</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().equals('/admin/orders') ? 'active':''}" sec:authorize="hasAuthority('ADMIN')"><a href="#" th:href="@{/admin/orders}">All Orders</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().contains('/users') ? 'active':''}" sec:authorize="hasAuthority('ADMIN')"><a href="#" th:href="@{/admin/users}">Users</a></li>
             </ul>
             <div sec:authorize="!isAuthenticated()">
                 <p class="navbar-text navbar-right">
@@ -42,13 +43,17 @@
                     <button type="submit" class="btn btn-default navbar-btn">Logout</button>
                 </form>
                 <p class="navbar-text navbar-right">
-                    <i class="glyphicon glyphicon-user"></i><a href="#" class="navbar-link"><span
+                    <i class="glyphicon glyphicon-user"></i><a th:href="@{/profile}" href="#" class="navbar-link"><span
                         sec:authentication="name">User</span></a>
                     &nbsp;&nbsp;
                 </p>
             </div>
         </div><!--/.nav-collapse -->
     </div>
+</div>
+<div th:fragment="msg">
+    <p class="alert alert-success" th:if="${success}" th:text="${success}"></p>
+    <p class="alert alert-danger" th:if="${error}" th:text="${error}"></p>
 </div>
 <div th:fragment="footer">
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

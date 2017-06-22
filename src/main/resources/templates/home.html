@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="partials/common::common_header">
 </head>
 <body>
@@ -8,9 +8,14 @@
 <div class="container" id="app">
     <div class="starter-template">
         <h1 th:text="Products">Products</h1>
+        <div th:include="partials/common::msg"></div>
         <div class="row">
             <div class="col-xs-12">
                 <div class="table-responsive">
+                    <div style="text-align: left; margin-bottom: 10px" sec:authorize="hasAuthority('ADMIN')">
+                        <a th:href="@{/admin/products/create}" class="btn btn-primary">Add Product</a>
+                    </div>
+                    <input sec:authorize="isAuthenticated()" type="hidden" th:value="${loggedInUser.id}" id="userId"/>
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr>
@@ -18,6 +23,8 @@
                             <th>Type</th>
                             <th>Price</th>
                             <th>Last Updated</th>
+                            <th sec:authorize="isAuthenticated()">Order</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody v-if="products.length">
@@ -26,10 +33,41 @@
                             <td>{{ product.productType }}</td>
                             <td>{{ product.price }}</td>
                             <td>{{ product.createdAt }}</td>
+                            <td sec:authorize="isAuthenticated()">
+                                <input type="number" name="quantity" placeholder="Quantity" class="quantity"/>
+                                <input type="button" class="btn btn-sm btn-primary" value="Order"
+                                       v-on:click="order(product, $event)"/>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" v-on:click="show(product.id)">Show</a>
+                                <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-warning btn-sm"
+                                   v-bind:href="'/admin/products/edit/' + product.id">Edit</a>
+                                <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger btn-sm"
+                                   v-on:click="destroy(product.id)">Delete</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </div><!--end of .table-responsive-->
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Product</h4>
+            </div>
+            <div class="modal-body">
+                <div><strong>Name: </strong><span id="name"></span></div>
+                <div><strong>Description: </strong><span id="desc"></span></div>
+                <div><strong>Price: </strong><span id="price"></span></div>
+                <div><strong>Type: </strong><span id="type"></span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -42,13 +80,64 @@
         el: '#app',
 
         data: {
-            products: []
+            products: [],
+
         },
         created: function () {
             axios.get(`http://localhost:8080/api/products`)
                 .then(response => {
                     this.products = response.data
                 });
+        },
+        methods: {
+            order: function (product, event) {
+                event.preventDefault();
+                event.stopPropagation();
+                let quantity = $(event.target).prev('input[name="quantity"]');
+
+                if (quantity.val().trim() === "" || quantity.val() === null || quantity.val() === 0) {
+                    alert("Please enter valid quantity");
+                    return;
+                }
+
+                let date = new Date();
+                let orderDate = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+                axios.post(`http://localhost:8080/api/orders`, {
+                    orderDate,
+                    personId: $("#userId").val(),
+                    orderLines: [
+                        {
+                            productId: product.id,
+                            quantity: quantity.val()
+                        }
+                    ]
+                })
+                    .then(response => {
+                        alert("Successfully added an order");
+                        quantity.val("");
+                    });
+            },
+
+            show: function (id) {
+                axios.get(`http://localhost:8080/api/products/${id}`)
+                    .then(response => {
+                        let product = response.data;
+                        $("#name").html(product.productName);
+                        $("#desc").html(product.description);
+                        $("#price").html(product.price);
+                        $("#type").html(product.productType);
+
+                        $("#myModal").modal('show');
+                    })
+            },
+
+            destroy: function (id) {
+                axios.delete(`http://localhost:8080/api/products/${id}`)
+                    .then(response => {
+                        alert("Product successfully deleted");
+                        this.products = this.products.filter(p => p.id !== id);
+                    })
+            }
         }
     })
 </script>

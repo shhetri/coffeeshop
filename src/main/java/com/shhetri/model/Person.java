@@ -2,6 +2,7 @@ package com.shhetri.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shhetri.validators.annotations.Password;
 import com.shhetri.validators.annotations.Phone;
 import com.shhetri.validators.annotations.UniqueEmail;
 import org.hibernate.annotations.DynamicUpdate;
@@ -42,7 +43,7 @@ public class Person extends Model {
 
     private boolean enabled = true;
 
-    @NotEmpty(message = "Password is required")
+    @Password(message = "Password is required")
     @Column(name = "password", length = 60, nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

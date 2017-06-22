@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDTO {
-    @NotNull
-    @Date
+    @NotNull(message = "Order date is required")
+    @Date(message = "Order must be a valid date")
     private String orderDate;
 
     @Valid
     private List<OrderLineDTO> orderLines = new ArrayList<>();
 
-    @NotNull
+    @NotNull(message = "Person id is required")
     private int personId;
 
     public String getOrderDate() {

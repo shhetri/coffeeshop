@@ -6,8 +6,9 @@
 <div th:replace="partials/common::common_navbar"></div>
 <div class="container">
     <div class="starter-template">
+        <h1>Add User</h1>
         <div class="wrapper">
-            <form class="form-horizontal" th:object="${user}" th:action="@{/register}" th:method="POST">
+            <form class="form-horizontal" th:object="${user}" th:action="@{/admin/users}" th:method="POST">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">First Name</label>
                     <div class="col-sm-10">
@@ -72,8 +73,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">Role</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="role">
+                            <option value="USER">USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Register</button>
+                        <button type="submit" class="btn btn-default">Create</button>
                     </div>
                 </div>
             </form>

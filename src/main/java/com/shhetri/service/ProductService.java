@@ -1,8 +1,10 @@
 package com.shhetri.service;
 
 import com.shhetri.exceptions.ModelNotFoundException;
+import com.shhetri.model.OrderLine;
 import com.shhetri.model.Product;
 import com.shhetri.model.ProductType;
+import com.shhetri.repository.OrderRepository;
 import com.shhetri.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,12 @@ import java.util.Optional;
 @Transactional
 public class ProductService {
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, OrderRepository orderRepository) {
         this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
     }
 
     public Product save(Product product) {
@@ -36,6 +40,12 @@ public class ProductService {
     }
 
     public void delete(Product product) {
+        List<OrderLine> orderLines = product.getOrdersLines();
+
+        for (OrderLine orderLine : orderLines) {
+            orderRepository.delete(orderLine.getOrder());
+        }
+
         productRepository.delete(product);
     }
 

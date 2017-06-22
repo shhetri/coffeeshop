@@ -18,9 +18,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     private final PersonRepository personRepository;
     private final HttpServletRequest request;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     public UniqueEmailValidator(PersonRepository personRepository, HttpServletRequest request) {
         this.personRepository = personRepository;

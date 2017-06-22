@@ -1,31 +1,35 @@
 package com.shhetri.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
 @DynamicUpdate
 public class Product extends Model {
-    @NotBlank
+    @NotBlank(message = "Product name is required")
     private String productName;
 
-    @NotBlank
+    @NotBlank(message = "Product Description is required")
     private String description;
 
-    @Min(0)
+    @Min(value = 1, message = "Quantity must be greater than 0")
     private double price;
 
-    @NotNull
+    @NotNull(message = "Product Type is required")
     @Enumerated(EnumType.STRING)
     private ProductType productType;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<OrderLine> ordersLines = new ArrayList<>();
 
     public Product() {
         super();
@@ -38,6 +42,11 @@ public class Product extends Model {
         this.price = price;
         this.productType = productType;
     }
+
+    public List<OrderLine> getOrdersLines() {
+        return ordersLines;
+    }
+
 
     public ProductType getProductType() {
         return productType;

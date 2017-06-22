@@ -1,6 +1,7 @@
 package com.shhetri.exceptions.handlers;
 
 import com.shhetri.exceptions.ModelNotFoundException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.AbstractMap;
 import java.util.List;
@@ -28,7 +30,7 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     public ResponseEntity<Object> handleValidationException(ConstraintViolationException e, WebRequest request) {
         List<String> validationErrors = e.getConstraintViolations()
                 .stream()
-                .map(constraintViolation -> constraintViolation.getPropertyPath() + " " + constraintViolation.getMessage())
+                .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
         AbstractMap.SimpleEntry<String, List<String>> error = new AbstractMap.SimpleEntry<>("error", validationErrors);
@@ -39,7 +41,7 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> validationErrors = ex.getBindingResult().getFieldErrors()
                 .stream()
-                .map(fieldError -> fieldError.getField() + " " + fieldError.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
         AbstractMap.SimpleEntry<String, List<String>> error = new AbstractMap.SimpleEntry<>("error", validationErrors);
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

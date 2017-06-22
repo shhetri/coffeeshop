@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="partials/common::common_header">
+</head>
+<body>
+<div th:replace="partials/common::common_navbar"></div>
+
+<div class="container" id="app">
+    <div class="starter-template">
+        <h1 th:text="Users">Users</h1>
+        <div th:include="partials/common::msg"></div>
+        <input type="hidden" id="userId" th:value="${user.id}" />
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Total Item</th>
+                            <th>Total Price</th>
+                        </tr>
+                        </thead>
+                        <tbody v-if="orders.length">
+                        <tr v-for="order in orders">
+                            <td>{{ order.orderDate}}</td>
+                            <td>{{ order.quantity}}</td>
+                            <td>{{ order.totalAmount}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div><!--end of .table-responsive-->
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="partials/common::footer"></div>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+
+        data: {
+            orders: []
+        },
+        created: function () {
+            axios.get(`http://localhost:8080/api/orders`)
+                .then(response => {
+                    let userId = $("#userId").val();
+                    this.orders = response.data.filter(order => order.person.id == userId);
+                });
+        }
+    })
+</script>
+</body>
+</html>

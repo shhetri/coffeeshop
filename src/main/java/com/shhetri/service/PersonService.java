@@ -26,8 +26,10 @@ public class PersonService {
 
     public Person savePerson(Person person) {
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        Authority authority = new Authority(person, "USER");
-        person.setAuthorities(Collections.singletonList(authority));
+        if (person.getAuthorities() == null || person.getAuthorities().isEmpty()) {
+            Authority authority = new Authority(person, "USER");
+            person.setAuthorities(Collections.singletonList(authority));
+        }
 
         return personRepository.save(person);
     }
@@ -35,6 +37,9 @@ public class PersonService {
     public Person updatePerson(Person person, int id) throws ModelNotFoundException {
         Person originalPerson = findById(id);
         originalPerson.setEmail(person.getEmail());
+        if (person.getPassword() != null && !person.getPassword().trim().isEmpty()) {
+            originalPerson.setPassword(passwordEncoder.encode(person.getPassword()));
+        }
         originalPerson.setEnabled(person.isEnabled());
         originalPerson.setFirstName(person.getFirstName());
         originalPerson.setLastName(person.getLastName());

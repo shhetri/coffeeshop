@@ -4,11 +4,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class OrderLineDTO {
-    @NotNull
-    @Min(1)
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be at least 1")
     private int quantity;
 
-    @NotNull
+    @NotNull(message = "Product id is required")
     private int productId;
 
     public int getQuantity() {
