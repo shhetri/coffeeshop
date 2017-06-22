@@ -1,34 +1,41 @@
 package com.shhetri.service;
 
 import com.shhetri.exceptions.ModelNotFoundException;
+import com.shhetri.model.Authority;
 import com.shhetri.model.Person;
 import com.shhetri.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @Transactional
 public class PersonService {
-
     private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PasswordEncoder passwordEncoder, PersonRepository personRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.personRepository = personRepository;
     }
 
     public Person savePerson(Person person) {
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
+        Authority authority = new Authority(person, "USER");
+        person.setAuthorities(Collections.singletonList(authority));
+
         return personRepository.save(person);
     }
 
     public Person updatePerson(Person person, int id) throws ModelNotFoundException {
         Person originalPerson = findById(id);
-        originalPerson.setAddress(person.getAddress());
         originalPerson.setEmail(person.getEmail());
-        originalPerson.setEnable(person.isEnable());
+        originalPerson.setEnabled(person.isEnabled());
         originalPerson.setFirstName(person.getFirstName());
         originalPerson.setLastName(person.getLastName());
         originalPerson.setPhone(person.getPhone());
@@ -37,7 +44,7 @@ public class PersonService {
         originalPerson.getAddress().setCity(person.getAddress().getCity());
         originalPerson.getAddress().setState(person.getAddress().getState());
 
-        return savePerson(originalPerson);
+        return personRepository.save(originalPerson);
     }
 
     public Person findByEmail(String email) throws ModelNotFoundException {

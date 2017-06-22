@@ -15,6 +15,7 @@ public class OrderDTO {
     @Valid
     private List<OrderLineDTO> orderLines = new ArrayList<>();
 
+    @NotNull
     private int personId;
 
     public String getOrderDate() {

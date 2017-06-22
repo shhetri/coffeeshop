@@ -8,16 +8,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "addresses")
 public class Address extends Model {
-    @NotEmpty
+    @NotEmpty(message = "City is required")
     private String city;
 
-    @NotEmpty
+    @NotEmpty(message = "State is required")
     private String state;
 
-    @NotEmpty
+    @NotEmpty(message = "Country is required")
     private String country;
 
-    @NotEmpty
+    @NotEmpty(message = "Zip code is required")
     private String zipcode;
 
     public String getCity() {

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="partials/common::common_header">
+</head>
+<body>
+<div th:replace="partials/common::common_navbar"></div>
+<div class="container">
+    <div class="starter-template">
+        <div class="wrapper">
+            <form class="form-horizontal" th:object="${user}" th:action="@{/register}" th:method="POST">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">First Name</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{firstName}"/>
+                        <span class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Last Name</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{lastName}"/>
+                        <span class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{email}"/>
+                        <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" name="password"/>
+                        <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Phone</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{phone}"/>
+                        <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Country</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{address.country}"/>
+                        <span class="error" th:if="${#fields.hasErrors('address.country')}" th:errors="*{address.country}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">State</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{address.state}"/>
+                        <span class="error" th:if="${#fields.hasErrors('address.state')}" th:errors="*{address.state}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">City</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{address.city}"/>
+                        <span class="error" th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Zipcode</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" th:field="*{address.zipcode}"/>
+                        <span class="error" th:if="${#fields.hasErrors('address.zipcode')}" th:errors="*{address.zipcode}">Name Error</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
