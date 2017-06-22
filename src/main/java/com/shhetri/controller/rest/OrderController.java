@@ -31,4 +31,9 @@ public class OrderController {
     public Order store(@Valid @RequestBody OrderDTO order) throws ModelNotFoundException {
         return orderService.save(order);
     }
+
+    @GetMapping("{id}")
+    public Order find(@PathVariable int id) throws ModelNotFoundException {
+        return orderService.findById(id);
+    }
 }
